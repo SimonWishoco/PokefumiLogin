@@ -7,6 +7,9 @@ export class API_utilisateurs {
     CurrentUserId: number = 0
     CurrentMatchId: number = 0
     
+    //DONE : user creation, connexion, rate players, create join and leave match, get list of all match
+    //TODO : match process, communicate with pokeAPI
+
     constructor() {}
 
     inscription(name:string) {
