@@ -1,37 +1,44 @@
 
 import { User, UserAccount, Match, Status } from "./model";
+import {listUsers, addUser} from "./userController"
 
 export class API_utilisateurs {
-    UserList: Array<User>=[]
+    //UserList: Array<User>=[]
     MatchList: Array<Match>=[]
     CurrentUserId: number = 0
     CurrentMatchId: number = 0
+
+    
     
     //DONE : user creation, connexion, rate players, create join and leave match, get list of all match
-    //TODO : match process, communicate with pokeAPI
+    //TODO : match process 
 
     constructor() {}
 
     inscription(name:string) {
+        
+        
         if (this.get_user(name) == null) {
             this.CurrentUserId ++;
-            var user_account = new UserAccount(name,this.CurrentUserId);
-            var user = new User(user_account)
-            this.UserList.push(user);
+            //var user_account = new UserAccount(name,this.CurrentUserId);
+            var user = new User(name,0);
+            addUser(user);
             console.log("user " + name + " successfully created")
         }
         else {
             console.log("user " + name + " already exists")
         }
+        
     }
 
     get_user(name:String) {
-        for (var user of this.UserList) {
-            if (user.getAccount().getName()==name) return user;
+        var users:User[] = listUsers();
+        for (var user of users) {
+            if (user.name) return user;
         }
         return null
     }
-
+    /*
     connection(name:string) {
         var user: User = this.get_user(name);
         if (user!=null) {
@@ -63,6 +70,7 @@ export class API_utilisateurs {
             console.log("user " + name + " does not exist, couldn't log him off")
         }
     }
+    */ 
 
     popBestPlayer(users:Array<[User,number]>) {
         // returns best player and pops it from the array "users"
@@ -87,13 +95,15 @@ export class API_utilisateurs {
         var bestPlayers: Array<[User,number]> = []
         var cloneUserList: Array<[User,number]> = []
         //clone user list and links a score to it's user
-        for (user of this.UserList) {
-            cloneUserList.push([user,user.getAccount().getScore()])
+        var users:User[] = listUsers();
+
+        for (user of users) {
+            cloneUserList.push([user,user.score])
         }
         var i=0;
         while (cloneUserList.length>0 && i<10) {
             var user:User = this.popBestPlayer(cloneUserList);
-            if (user) bestPlayers.push([user,user.getAccount().getScore()]);
+            if (user) bestPlayers.push([user,user.score]);
             i++
         }
         return bestPlayers;
@@ -103,7 +113,7 @@ export class API_utilisateurs {
     changePlayerScore(name:String,score:number) {
         var user=this.get_user(name)
         if (user) {
-            user.getAccount().setScore(score)
+            user.score = score
             console.log("Successfully changed " + name + "'s score to " + score)
         }
         else console.log("Failed to change score : user " + name + " does not exist")
@@ -120,7 +130,8 @@ export class API_utilisateurs {
     }
 
     displayAllPlayers() {
-        console.log("La liste de tout les joueurs inscrits : " + this.UserList.toString())
+        var users:User[] = listUsers();
+        console.log("La liste de tout les joueurs inscrits : " + users.toString())
     }
 
     getMatch(id:number) {

@@ -1,13 +1,20 @@
 
 
 export class User {
-    account: UserAccount;
-    online: Boolean = false;
-
+    name:String;
+    score:number;
+    //account: UserAccount;
+    //online: Boolean = false;
+    constructor(n:String,s:number) {
+        this.name=n;
+        this.score=s;
+    }
+    /*
     constructor(account:UserAccount) {
         this.account=account;
     }
-
+    */
+/*
     getAccount() {
         return this.account
     }
@@ -29,6 +36,7 @@ export class User {
         if (this.online) status="online"
         return "{" + this.account.toString() + "} is " + status
     }
+    */
   }
   
 export class UserAccount {

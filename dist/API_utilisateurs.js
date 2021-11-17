@@ -2,9 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.API_utilisateurs = void 0;
 const model_1 = require("./model");
+const userController_1 = require("./userController");
 class API_utilisateurs {
+    //DONE : user creation, connexion, rate players, create join and leave match, get list of all match
+    //TODO : match process 
     constructor() {
-        this.UserList = [];
+        //UserList: Array<User>=[]
         this.MatchList = [];
         this.CurrentUserId = 0;
         this.CurrentMatchId = 0;
@@ -12,9 +15,9 @@ class API_utilisateurs {
     inscription(name) {
         if (this.get_user(name) == null) {
             this.CurrentUserId++;
-            var user_account = new model_1.UserAccount(name, this.CurrentUserId);
-            var user = new model_1.User(user_account);
-            this.UserList.push(user);
+            //var user_account = new UserAccount(name,this.CurrentUserId);
+            var user = new model_1.User(name, 0);
+            (0, userController_1.addUser)(user);
             console.log("user " + name + " successfully created");
         }
         else {
@@ -22,42 +25,46 @@ class API_utilisateurs {
         }
     }
     get_user(name) {
-        for (var user of this.UserList) {
-            if (user.getAccount().getName() == name)
+        var users = (0, userController_1.listUsers)();
+        for (var user of users) {
+            if (user.name)
                 return user;
         }
         return null;
     }
-    connection(name) {
-        var user = this.get_user(name);
-        if (user != null) {
+    /*
+    connection(name:string) {
+        var user: User = this.get_user(name);
+        if (user!=null) {
             if (user.isOnline()) {
-                console.log("user " + name + " is already logged in");
+                console.log("user " + name + " is already logged in")
             }
             else {
                 user.connect();
-                console.log("user " + name + " successfully logged in");
+                console.log("user " + name + " successfully logged in")
             }
         }
         else {
-            console.log("user " + name + " does not exist, couldn't log him in");
+            console.log("user " + name + " does not exist, couldn't log him in")
         }
     }
-    disconnection(name) {
-        var user = this.get_user(name);
-        if (user != null) {
+    
+    disconnection(name:string) {
+        var user: User = this.get_user(name);
+        if (user!=null) {
             if (!user.isOnline()) {
-                console.log("user " + name + " is already logged off");
+                console.log("user " + name + " is already logged off")
             }
             else {
                 user.disconnect();
-                console.log("user " + name + " successfully logged off");
+                console.log("user " + name + " successfully logged off")
             }
         }
         else {
-            console.log("user " + name + " does not exist, couldn't log him off");
+            console.log("user " + name + " does not exist, couldn't log him off")
         }
     }
+    */
     popBestPlayer(users) {
         // returns best player and pops it from the array "users"
         var bestUser = null;
@@ -80,14 +87,15 @@ class API_utilisateurs {
         var bestPlayers = [];
         var cloneUserList = [];
         //clone user list and links a score to it's user
-        for (user of this.UserList) {
-            cloneUserList.push([user, user.getAccount().getScore()]);
+        var users = (0, userController_1.listUsers)();
+        for (user of users) {
+            cloneUserList.push([user, user.score]);
         }
         var i = 0;
         while (cloneUserList.length > 0 && i < 10) {
             var user = this.popBestPlayer(cloneUserList);
             if (user)
-                bestPlayers.push([user, user.getAccount().getScore()]);
+                bestPlayers.push([user, user.score]);
             i++;
         }
         return bestPlayers;
@@ -95,7 +103,7 @@ class API_utilisateurs {
     changePlayerScore(name, score) {
         var user = this.get_user(name);
         if (user) {
-            user.getAccount().setScore(score);
+            user.score = score;
             console.log("Successfully changed " + name + "'s score to " + score);
         }
         else
@@ -110,7 +118,8 @@ class API_utilisateurs {
         console.log(res);
     }
     displayAllPlayers() {
-        console.log("La liste de tout les joueurs inscrits : " + this.UserList.toString());
+        var users = (0, userController_1.listUsers)();
+        console.log("La liste de tout les joueurs inscrits : " + users.toString());
     }
     getMatch(id) {
         //recovers a match from id
