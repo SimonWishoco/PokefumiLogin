@@ -1,66 +1,11 @@
-
-
-export class User {
-    account: UserAccount;
-    online: Boolean = false;
-
-    constructor(account:UserAccount) {
-        this.account=account;
-    }
-
-    getAccount() {
-        return this.account
-    }
-
-    isOnline() {
-        return this.online
-    }
-
-    connect() {
-        this.online=true;
-    }
-
-    disconnect() {
-        this.online=false;
-    }
-
-    toString() {
-        var status = "offline"
-        if (this.online) status="online"
-        return "{" + this.account.toString() + "} is " + status
-    }
-  }
-  
-export class UserAccount {
+export type User = {
     name: string;
-    id: number;
-    score: number=0;
+    score: number;
+}
 
-    constructor(name: string, id: number, score?:number) {
-      this.name = name;
-      this.id = id;
-      this.score=score;
-    }
 
-    getName() {
-        return this.name
-    }
-
-    getScore() {
-        return this.score
-    }
-
-    setScore(score:number) {
-        this.score=score;
-    }
-
-    toString() {
-        return this.name + " : player n°" + this.id + ", score = " + this.score 
-    }
-  }
-
-  export class Match {
-      id:number;
+export class Match {
+    id:number;
       status:Status = Status.Opened;
       players:[User,User];
 
