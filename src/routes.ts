@@ -3,7 +3,7 @@ import * as userController from "./userController"
 import { User } from './model'
 
 export const register = ( app: express.Application ) => {
-  app.get('/', (req, res) => res.send('Hello World (local repo)!'));
+  app.get('/', (req, res) => res.send('Hello World !'));
 
   app.get('/user', (req, res) => {
 	res.status(200).json(userController.listUsers())
