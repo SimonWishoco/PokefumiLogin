@@ -31,6 +31,12 @@ export default class UserRepository {
     return statement.run(name).lastInsertRowid
   }
 
+  removeUser(name: String){
+    const statement = 
+      this.db.prepare("DELETE FROM users WHERE name = '"+name+"'")
+    statement.run()
+    return this.getAllUsers()
+  }
 
   applyMigrations(){
     const applyMigration = (path: string) => {

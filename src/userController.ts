@@ -16,6 +16,10 @@ const listUsers = () => {
   const getUser = (name: string) => {
     return userRepository.getUser(name)
   }
+
+  const removeUser = (name: string) => {
+    return userRepository.removeUser(name)
+  }
   
 
 export { listUsers, addUser, getUser }
