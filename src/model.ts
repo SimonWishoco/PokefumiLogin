@@ -1,14 +1,14 @@
 
 
 export class User {
-    name:String;
+    name:string;
     score:number;
     //account: UserAccount;
     //online: Boolean = false;
-    constructor(n:String,s:number) {
+    constructor(n:string,s:number) {
         this.name=n;
         this.score=s;
-    }
+    }    
     /*
     constructor(account:UserAccount) {
         this.account=account;
@@ -30,11 +30,10 @@ export class User {
     disconnect() {
         this.online=false;
     }
-
-    toString() {
-        var status = "offline"
-        if (this.online) status="online"
-        return "{" + this.account.toString() + "} is " + status
+    
+    toString():string {
+        console.log("Player " + this.name + ", score = " + this.score )
+        return "Player " + this.name + ", score = " + this.score 
     }
     */
   }

@@ -1,13 +1,21 @@
 import { User } from './model'
 import users from './users.json'
+import UserRepository from './userRepository'
 
-const typedUsers: User[] = users
+const userRepository = new UserRepository()
 
-const listUsers = () => typedUsers
+const listUsers = () => {
+    return userRepository.getAllUsers()
+  }
+  
+  const addUser = (newUser: User) => {
+    userRepository.createUser(newUser.name)
+    return userRepository.getAllUsers()
+  }
 
-const addUser = (newUser: User) => {
-  typedUsers.push(newUser)
-  return typedUsers
-}
+  const getUser = (name: string) => {
+    return userRepository.getUser(name)
+  }
+  
 
-export { listUsers, addUser }
+export { listUsers, addUser, getUser }

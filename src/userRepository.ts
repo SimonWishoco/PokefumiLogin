@@ -1,14 +1,36 @@
 import Database from 'better-sqlite3'
+
+import { User, UserAccount, Match, Status } from "./model";
 import fs from 'fs'
-import {User} from './model'
 
 export default class UserRepository {
   db: Database.Database
+
   
+
   constructor() {
     this.db = new Database('db/users.db', { verbose: console.log });
     this.applyMigrations()    
   }
+
+  getAllUsers(): User[] {
+    const statement = this.db.prepare("SELECT * FROM users")
+    const rows: User[] =statement.all()
+    return rows
+  }
+
+  getUser(name:string): User {
+    const statement = this.db.prepare("SELECT * FROM users WHERE name='"+name+"'")
+    const rows: User =statement.all()[0]
+    return rows
+  }
+
+  createUser(name: string) {
+    const statement = 
+      this.db.prepare("INSERT INTO users (name) VALUES (?)")
+    return statement.run(name).lastInsertRowid
+  }
+
 
   applyMigrations(){
     const applyMigration = (path: string) => {
@@ -24,17 +46,4 @@ export default class UserRepository {
       migrations.forEach(applyMigration)
     }
   }
-
-  getAllUsers(): User[] {
-    const statement = this.db.prepare("SELECT * FROM users")
-    const rows: User[] =statement.all()
-    return rows
-  }
-
-  createUser(name: string) {
-    const statement = 
-      this.db.prepare("INSERT INTO users (name) VALUES (?)")
-    return statement.run(name).lastInsertRowid
-  }
-
 }
