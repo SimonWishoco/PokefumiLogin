@@ -22,7 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
 const userController = __importStar(require("./userController"));
 const register = (app) => {
-    app.get('/', (req, res) => res.send('Hello World (git repo)!'));
+    app.get('/', (req, res) => res.send('Hello World !'));
     app.get('/user', (req, res) => {
         res.status(200).json(userController.listUsers());
     });
