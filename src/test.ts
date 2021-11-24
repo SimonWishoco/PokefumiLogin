@@ -16,7 +16,7 @@ api.inscription("Fred")
 api.inscription("Pepito")
 
 api.displayAllPlayers()
-
+/*
 api.connection("Bro")   //should fail
 api.connection("Freud")
 api.connection("Margoulain")
@@ -27,7 +27,7 @@ api.connection("Shimon San")
 api.disconnection("Mais non")   //should fail
 api.disconnection("Sumimasen")  //should fail
 api.disconnection("Margoulain")
-
+*/
 
 api.changePlayerScore("Broooooo",5) //should fail
 api.changePlayerScore("Shimon San",250)

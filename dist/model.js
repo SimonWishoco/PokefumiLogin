@@ -2,27 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Status = exports.Match = exports.UserAccount = exports.User = void 0;
 class User {
-    constructor(account) {
-        this.online = false;
-        this.account = account;
-    }
-    getAccount() {
-        return this.account;
-    }
-    isOnline() {
-        return this.online;
-    }
-    connect() {
-        this.online = true;
-    }
-    disconnect() {
-        this.online = false;
-    }
-    toString() {
-        var status = "offline";
-        if (this.online)
-            status = "online";
-        return "{" + this.account.toString() + "} is " + status;
+    //account: UserAccount;
+    //online: Boolean = false;
+    constructor(n, s) {
+        this.name = n;
+        this.score = s;
     }
 }
 exports.User = User;
