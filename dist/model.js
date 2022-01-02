@@ -1,36 +1,35 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Status = exports.Match = exports.UserAccount = exports.User = void 0;
+exports.Status = exports.Match = exports.User = exports.Game = void 0;
+class Game {
+    constructor() {
+        this.connectedUsers = [];
+    }
+    getConnectedUsers() {
+        return this.connectedUsers;
+    }
+    connect(name) {
+        this.connectedUsers.push(name);
+    }
+    disconnect(name) {
+        const index = this.connectedUsers.indexOf(name);
+        if (index > -1) {
+            this.connectedUsers.splice(index, 1);
+        }
+    }
+}
+exports.Game = Game;
 class User {
-    //account: UserAccount;
-    //online: Boolean = false;
     constructor(n, s) {
         this.name = n;
         this.score = s;
     }
+    toString() {
+        console.log("Player " + this.name + ", score = " + this.score);
+        return "Player " + this.name + ", score = " + this.score;
+    }
 }
 exports.User = User;
-class UserAccount {
-    constructor(name, id, score) {
-        this.score = 0;
-        this.name = name;
-        this.id = id;
-        this.score = score;
-    }
-    getName() {
-        return this.name;
-    }
-    getScore() {
-        return this.score;
-    }
-    setScore(score) {
-        this.score = score;
-    }
-    toString() {
-        return this.name + " : player n°" + this.id + ", score = " + this.score;
-    }
-}
-exports.UserAccount = UserAccount;
 class Match {
     constructor(id, status, players) {
         this.status = Status.Opened;

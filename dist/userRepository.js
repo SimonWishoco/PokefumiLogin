@@ -10,6 +10,26 @@ class UserRepository {
         this.db = new better_sqlite3_1.default('db/users.db', { verbose: console.log });
         this.applyMigrations();
     }
+    getAllUsers() {
+        const statement = this.db.prepare("SELECT * FROM users");
+        const rows = statement.all();
+        return rows;
+    }
+    getUser(name) {
+        const statement = this.db.prepare("SELECT * FROM users WHERE name='" + name + "'");
+        console.log(statement.all()[0]);
+        const rows = statement.all()[0];
+        return rows;
+    }
+    createUser(name, score) {
+        const statement = this.db.prepare("INSERT INTO users (name, score) VALUES ('" + name + "','" + score + "')");
+        return statement.run().lastInsertRowid;
+    }
+    removeUser(name) {
+        const statement = this.db.prepare("DELETE FROM users WHERE name = '" + name + "'");
+        statement.run();
+        return this.getAllUsers();
+    }
     applyMigrations() {
         const applyMigration = (path) => {
             const migration = fs_1.default.readFileSync(path, 'utf8');
@@ -21,15 +41,6 @@ class UserRepository {
             const migrations = ['db/migrations/init.sql'];
             migrations.forEach(applyMigration);
         }
-    }
-    getAllUsers() {
-        const statement = this.db.prepare("SELECT * FROM users");
-        const rows = statement.all();
-        return rows;
-    }
-    createUser(name) {
-        const statement = this.db.prepare("INSERT INTO users (name) VALUES (?)");
-        return statement.run(name).lastInsertRowid;
     }
 }
 exports.default = UserRepository;

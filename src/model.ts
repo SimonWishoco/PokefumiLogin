@@ -1,69 +1,46 @@
+export class Game {
+    connectedUsers:Array<string>=[];
 
+    constructor(){
+    }
+
+    getConnectedUsers(){
+        return this.connectedUsers
+    }
+
+    connect(name: string){
+        this.connectedUsers.push(name)
+    }
+
+    disconnect(name: string){
+        const index = this.connectedUsers.indexOf(name)
+        if (index > -1) {
+            this.connectedUsers.splice(index, 1);
+           }
+        }
+  }
 
 export class User {
+    user_id: number;
     name:string;
     score:number;
-    //account: UserAccount;
-    //online: Boolean = false;
-    constructor(n:string,s:number) {
+
+    constructor(n:string, s:number) {
         this.name=n;
         this.score=s;
-    }    
-    /*
-    constructor(account:UserAccount) {
-        this.account=account;
-    }
-    */
-/*
-    getAccount() {
-        return this.account
     }
 
-    isOnline() {
-        return this.online
-    }
-
-    connect() {
-        this.online=true;
-    }
-
-    disconnect() {
-        this.online=false;
+    constructor(id:number, n:string, s:number) {
+        this.user_id=id;
+        this.name=n;
+        this.score=s;
     }
     
     toString():string {
         console.log("Player " + this.name + ", score = " + this.score )
         return "Player " + this.name + ", score = " + this.score 
     }
-    */
-  }
-  
-export class UserAccount {
-    name: string;
-    id: number;
-    score: number=0;
 
-    constructor(name: string, id: number, score?:number) {
-      this.name = name;
-      this.id = id;
-      this.score=score;
-    }
-
-    getName() {
-        return this.name
-    }
-
-    getScore() {
-        return this.score
-    }
-
-    setScore(score:number) {
-        this.score=score;
-    }
-
-    toString() {
-        return this.name + " : player n°" + this.id + ", score = " + this.score 
-    }
   }
 
   export class Match {

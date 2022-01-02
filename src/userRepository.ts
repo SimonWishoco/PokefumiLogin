@@ -1,12 +1,10 @@
 import Database from 'better-sqlite3'
 
-import { User, UserAccount, Match, Status } from "./model";
+import {User, Match, Status } from "./model";
 import fs from 'fs'
 
 export default class UserRepository {
   db: Database.Database
-
-  
 
   constructor() {
     this.db = new Database('db/users.db', { verbose: console.log });
@@ -21,14 +19,14 @@ export default class UserRepository {
 
   getUser(name:string): User {
     const statement = this.db.prepare("SELECT * FROM users WHERE name='"+name+"'")
-    const rows: User =statement.all()[0]
+    const rows: User = statement.all()[0]
     return rows
   }
 
-  createUser(name: string) {
+  createUser(name: string, score: number) {
     const statement = 
-      this.db.prepare("INSERT INTO users (name) VALUES (?)")
-    return statement.run(name).lastInsertRowid
+      this.db.prepare("INSERT INTO users (name, score) VALUES ('"+name+"','"+ score+"')")
+    return statement.run().lastInsertRowid
   }
 
   removeUser(name: String){
