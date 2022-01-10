@@ -1,10 +1,10 @@
 import * as express from "express"
 import { SyncRequestClient } from 'ts-sync-request/dist'
 
-const usersPort = "5001"
-const matchesPort = "5002"
-const decksPort = "5003"
-const matchesDevelopmentPort = "5004"
+const usersPort = "user:5001"
+const matchesPort = "match:5002"
+const decksPort = "deck:5003"
+const matchesDevelopmentPort = "match_development:5004"
 var request = require('sync-request');
 
 const getConnectedUsersList = (sessions: { [token: number]: string })=>{
@@ -16,12 +16,12 @@ const getConnectedUsersList = (sessions: { [token: number]: string })=>{
 }
 
 const getUserDecks = (user:string) => {
-    var url = "http://0.0.0.0:"+decksPort+"/deck/"+user
+    var url = "http://"+decksPort+"/deck/"+user
     return JSON.parse(request('GET', url).getBody())
 }
 
 const getDeck = (deck_id: number) => {
-    var url = "http://0.0.0.0:"+decksPort+"/deck/id/"+deck_id
+    var url = "http://"+decksPort+"/deck/id/"+deck_id
     var result = JSON.parse(request('GET', url).getBody())
     return result
 }
@@ -34,14 +34,14 @@ export const register = ( app: express.Application ) => {
   app.get('/', (req, res) => res.send('Bienvenue à Pokéfumi !'));
 
   app.get('/users', (req, res) => {
-    var url = "http://0.0.0.0:"+usersPort+"/user"
+    var url = "http://"+usersPort+"/user"
     var result = request('GET', url);
     var resultParsed = JSON.parse(result.getBody())
     res.status(200).json(resultParsed)
     })
 
   app.put('/user', (req, res) => {
-    var url = "http://0.0.0.0:"+usersPort+"/user"
+    var url = "http://"+usersPort+"/user"
     var result = JSON.parse(request('PUT', url, {'json': req.body}).getBody())
     res.status(200).json(result)
   })
@@ -54,7 +54,7 @@ export const register = ( app: express.Application ) => {
     }
     else {
         var body = req.body
-        var url = "http://0.0.0.0:"+usersPort+"/user/connect/"
+        var url = "http://"+usersPort+"/user/connect/"
         var result = JSON.parse(request('POST', url, {'json': body}).getBody())
         var user = result['user']
         if (user !== undefined){
@@ -103,7 +103,7 @@ export const register = ( app: express.Application ) => {
         var user = sessions[Number(token)]
         var body = req.body
         body['deck_owner'] = user
-        var url = "http://0.0.0.0:"+decksPort+"/deck"
+        var url = "http://"+decksPort+"/deck"
         var result = request('PUT', url, {'json': body})
         if (result.statusCode==200){
             var parsedDeck = JSON.parse(result.getBody())
@@ -123,7 +123,7 @@ export const register = ( app: express.Application ) => {
     if (token !== undefined){
         var user = sessions[Number(token)]
         var chosenPlayer = req.body['player']
-        var url = "http://0.0.0.0:"+matchesPort+"/match/ongoing/"+user
+        var url = "http://"+matchesPort+"/match/ongoing/"+user
         var results = JSON.parse(request('GET', url).getBody())
         if (Object.keys(results).length !== 0) {
             res.status(200).send("Error: You already have an ongoing match, you cannot create another.")
@@ -140,7 +140,7 @@ export const register = ( app: express.Application ) => {
                     var userOwnsDeck = userDecks.some((item: {'deck_id': number}) =>(item.deck_id === chosenDeck))
                     if (userOwnsDeck == true){
                         var body = {'player1':user, 'player2': chosenPlayer, 'player1deck': chosenDeck}
-                        var url = "http://0.0.0.0:"+matchesPort+"/match"
+                        var url = "http://"+matchesPort+"/match"
                         var result = JSON.parse(request('PUT', url, {'json': body}).getBody())
                         res.status(200).json(result)
                     }
@@ -163,7 +163,7 @@ export const register = ( app: express.Application ) => {
     var token = req.headers['token']
     if (token !== undefined){
         var user = sessions[Number(token)]
-        var url = "http://0.0.0.0:"+matchesPort+"/matches/user/"+user
+        var url = "http://"+matchesPort+"/matches/user/"+user
         var result = JSON.parse(request('GET', url).getBody())
         res.status(200).json(result)
     }
@@ -177,11 +177,11 @@ export const register = ( app: express.Application ) => {
      if (token !== undefined){
          var user = sessions[Number(token)]
          var match_id = req.params.match_id
-         var url = "http://0.0.0.0:"+matchesPort+"/match/"+match_id
+         var url = "http://"+matchesPort+"/match/"+match_id
          var match = JSON.parse(request('GET', url).getBody())
          console.log(match)
          if (match['status'] == 'PENDING' || match['status'] == 'ONGOING'){
-             var url = "http://0.0.0.0:"+matchesPort+"/match/cancel/"+match_id
+             var url = "http://"+matchesPort+"/match/cancel/"+match_id
              var result = JSON.parse(request('POST', url).getBody())
              res.status(200).json(result)
          }
@@ -198,7 +198,7 @@ export const register = ( app: express.Application ) => {
     var token = req.headers['token']
     if (token !== undefined){
         var user = sessions[Number(token)]
-        var url = "http://0.0.0.0:"+matchesPort+"/match/pending/"+user
+        var url = "http://"+matchesPort+"/match/pending/"+user
         var result = JSON.parse(request('GET', url).getBody())
         res.status(200).json(result)
     }
@@ -211,14 +211,14 @@ export const register = ( app: express.Application ) => {
     var token = req.headers['token']
     if (token !== undefined){
         var user = sessions[Number(token)]
-        var url = "http://0.0.0.0:"+matchesPort+"/match/ongoing/"+user
+        var url = "http://"+matchesPort+"/match/ongoing/"+user
         var ongoingMatches = JSON.parse(request('GET', url).getBody())
         if (ongoingMatches.length === 0){
             var body = req.body
-            var url = "http://0.0.0.0:"+matchesPort+"/match/"+body['match_id']
+            var url = "http://"+matchesPort+"/match/"+body['match_id']
             var match = JSON.parse(request('GET', url).getBody())
             if (match['status'] == 'PENDING'){
-                var url = "http://0.0.0.0:"+matchesPort+"/match/accept"
+                var url = "http://"+matchesPort+"/match/accept"
                 var result = JSON.parse(request('POST', url, {'json': body}).getBody())
                 res.status(200).json(result)
             }
@@ -240,11 +240,11 @@ export const register = ( app: express.Application ) => {
     var token = req.headers['token']
     if (token !== undefined){
         var user = sessions[Number(token)]
-        var url = "http://0.0.0.0:"+matchesPort+"/match/ongoing/"+user
+        var url = "http://"+matchesPort+"/match/ongoing/"+user
         var results = JSON.parse(request('GET', url).getBody())
         if (Object.keys(results).length !== 0) {
             var ongoingMatch:{'match_id': number, "player1deck": number, "player2deck": number} = results[results.length - 1]
-            var url = "http://0.0.0.0:"+matchesPort+"/match/development/"+ongoingMatch['match_id']
+            var url = "http://"+matchesPort+"/match/development/"+ongoingMatch['match_id']
             var result2 = JSON.parse(request('GET', url).getBody())
             if (user === result2['player1']){
                 var adversary = result2['player2']
@@ -284,11 +284,11 @@ export const register = ( app: express.Application ) => {
     if (token !== undefined){
         var user = sessions[Number(token)]
         var chosenCard = req.params.card
-        var url = "http://0.0.0.0:"+matchesPort+"/match/ongoing/"+user
+        var url = "http://"+matchesPort+"/match/ongoing/"+user
         var result = JSON.parse(request('GET', url).getBody())
         if (Object.keys(result).length !== 0){
             var ongoingMatch:{'match_id': number, "player1deck": number, "player2deck": number} = result[result.length - 1]
-            var url = "http://0.0.0.0:"+matchesPort+"/match/development/"+ongoingMatch['match_id']
+            var url = "http://"+matchesPort+"/match/development/"+ongoingMatch['match_id']
             var ongoingMatchDevelopment= JSON.parse(request('GET', url).getBody())
             if (user === ongoingMatchDevelopment['turn']){
                 if (user === ongoingMatchDevelopment['player1']){
@@ -303,7 +303,7 @@ export const register = ( app: express.Application ) => {
                     if (chosenCard == userChosenDeck.card1 || chosenCard == userChosenDeck.card2 ||
                         chosenCard == userChosenDeck.card3 || chosenCard == userChosenDeck.card4 ||
                         chosenCard == userChosenDeck.card5 ){
-                        var url = "http://0.0.0.0:"+matchesDevelopmentPort+"/play"
+                        var url = "http://"+matchesDevelopmentPort+"/play"
                         var body = {"match_id":ongoingMatch['match_id'], "player": user, "card" : chosenCard}
                         var result3 = JSON.parse(request('POST', url, {"json": body}).getBody())
                         if (Object.keys(result3).length !==0){
@@ -327,7 +327,7 @@ export const register = ( app: express.Application ) => {
                             "played a pokemon of type \""+ opponentType + "\""
 
                             if (ongoingMatchDevelopment['round'] == 5){
-                                var url = "http://0.0.0.0:"+matchesPort+"/match/finish/"+ongoingMatch['match_id']
+                                var url = "http://"+matchesPort+"/match/finish/"+ongoingMatch['match_id']
                                 request('POST', url).getBody()
                             }
                             res.status(200).send(response)

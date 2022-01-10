@@ -47,7 +47,7 @@ export default class DeckRepository {
 
       if (!testRow){
         console.log('Applying migrations on DB users...')
-        const migrations = ['db/migrations/init.sql']
+        const migrations = ['/db/migrations/init.sql']
         migrations.forEach(applyMigration)
       }
     }

@@ -49,7 +49,7 @@ const register = (app) => {
     });
     app.get('/match/development/:match_id', (req, res) => {
         var match_id = req.params.match_id;
-        var url = "http://0.0.0.0:5004/matchdevelopment/" + match_id;
+        var url = "http://match_development:5004/matchdevelopment/" + match_id;
         var result = JSON.parse(request('GET', url).getBody());
         res.status(200).json(result);
     });
@@ -57,7 +57,7 @@ const register = (app) => {
         var match_id = req.body['match_id'];
         var chosen_deck = req.body['deck'];
         var startedMatch = matchController.acceptMatch(match_id, chosen_deck)[0];
-        var url = "http://0.0.0.0:5004/start";
+        var url = "http://match_development:5004/start";
         var body = { "match_id": startedMatch['match_id'], "player1": startedMatch['player1'], "player2": startedMatch['player2'] };
         var result = request('POST', url, { 'json': body }).getBody();
         res.status(200).json(startedMatch);

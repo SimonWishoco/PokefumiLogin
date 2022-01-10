@@ -6,6 +6,8 @@ COPY . .
 
 RUN npm install
 
-CMD ["npm", "start"]
+RUN npm install ts-sync-request
 
-EXPOSE 5001
+CMD npm start run
+
+EXPOSE 5003
