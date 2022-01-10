@@ -20,7 +20,7 @@ export const register = ( app: express.Application ) => {
     var params=req.params.name
     var user:User = userController.getUser(params)
     var name:string = user.name
-    var score:number = user.score
+    var score:number = 0
     res.status(200).send(name + " " + score.toString())
     })
 
