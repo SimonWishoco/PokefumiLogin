@@ -1,0 +1,31 @@
+version: '3'
+
+services: 
+    gate: 
+        build: ./src/gate
+        restart: always
+        volume: ./gate/src: ./src/gate/src
+        ports:
+            - "5000:5000"
+            
+    user:
+        build: ./src/user
+        restart: always
+        volume: ./user/db: ./src/user/db
+    
+    match: 
+        build: ./src/match
+        restart: always
+        volume: ./match/db: ./src/match/db
+        
+    deck:
+        build: ./src/deck
+        restart: always
+        volume: ./deck/db: ./src/deck/db
+    
+    match_development:
+        build: ./src/match_development
+        restart: always
+        volume: ./match_development/sec: ./src/match_development/src
+        
+    

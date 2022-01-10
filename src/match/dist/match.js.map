@@ -1,0 +1,1 @@
+{"version":3,"file":"match.js","sourceRoot":"","sources":["../src/match.ts"],"names":[],"mappings":";;;AAAA,MAAa,KAAK;IAQd,YAAY,QAAe,EAAC,OAAc,EAAE,OAAe;QACvD,IAAI,CAAC,QAAQ,GAAE,QAAQ,CAAA;QACvB,IAAI,CAAC,OAAO,GAAG,OAAO,CAAA;QACtB,IAAI,CAAC,OAAO,GAAG,OAAO,CAAA;IAC1B,CAAC;CACJ;AAbD,sBAaC"}
